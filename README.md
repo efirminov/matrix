@@ -1,6 +1,6 @@
-#Matrix Chat: Criando o nosso projeto Aluracord
+# Matrix Chat: Criando o nosso projeto Aluracord
 
-##Projeto criado na imersão React com a @alura @omariosouto @peas
+## Projeto criado na imersão React com a @alura @omariosouto @peas
 
 <a href="https://matrix-one.vercel.app/">Link do projeto</a>
 
