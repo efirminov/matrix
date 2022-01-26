@@ -8,4 +8,5 @@
 2. Next.js
 3. deplay na Vercel
 
-![react](https://user-images.githubusercontent.com/64451061/150852361-25f49c29-ef84-4446-be36-821c006436e2.jpg)
+https://user-images.githubusercontent.com/64451061/151028920-41f6f5aa-50ce-43cb-ab9e-823db54de0b3.mp4
+
