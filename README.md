@@ -1,4 +1,4 @@
-# Matrix Chat: projeto Aluracord
+# Projeto: Chat
 
 ## Projeto criado na imersão React com a @alura @omariosouto @peas
 
