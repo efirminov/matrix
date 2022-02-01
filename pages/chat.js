@@ -1,13 +1,14 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
+import { useRouter } from 'next/router';
+import { ButtonSendSticker } from '../src/components/ButtonsSendSticker';
 
 // Como fazer AJAX: https://medium.com/@omariosouto/entendendo-como-fazer-ajax-com-a-fetchapi-977ff20da3c6
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzI4ODQzOSwiZXhwIjoxOTU4ODY0NDM5fQ.x8vIok8ICOePYXKQR_HnwWV-EyNjCPsyiPnpYr3nz0s';
 const SUPABASE_URL = 'https://gdiwlbtuqmnmxoyboiqc.supabase.co';
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 
 function Header() {
     return (
@@ -84,7 +85,15 @@ function MessageList(props) {
                                 {(new Date().toLocaleDateString())}
                             </Text>
                         </Box>
-                        {mensagem.texto}
+                        {mensagem.texto.startsWith(':sticker:')
+                            ? (
+                                <Image src={mensagem.texto.replace(':sticker:', '')} />
+                            )
+                            :
+                            (
+                                mensagem.texto
+                            )}
+
                     </Text>
                 );
             })}
@@ -92,19 +101,18 @@ function MessageList(props) {
     )
 }
 
-export default function ChatPage() {
-    /*
-     // Usuário
-     - Usuário digita no campo textarea
-     - Aperta enter para enviar
-     - Tem que adicionar o texto na listagem
-     
-     // Dev
-     - [X] Campo criado
-     - [X] Vamos usar o onChange usa o useState (ter if pra caso seja enter pra limpar a variavel)
-     - [X] Lista de mensagens 
-     */
+function escutaMensagensEmTempoReal(adicionaMensagem) {
+    return supabaseClient
+        .from('mensagens')
+        .on('INSERT', (respostaLive) => {
+            adicionaMensagem(respostaLive.new);
+        })
+        .subscribe();
+}
 
+export default function ChatPage() {
+    const roteamento = useRouter();
+    const usuarioLogado = roteamento.query.username;
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
 
@@ -117,12 +125,21 @@ export default function ChatPage() {
                 console.log('Dados da consulta:', data);
                 setListaDeMensagens(data);
             });
+            
+        escutaMensagensEmTempoReal((novaMensagem) => {
+            setListaDeMensagens((valorAtualDaLista) => {
+                return [
+                    novaMensagem,
+                    ...valorAtualDaLista,
+                ]
+            });
+        });
     }, []);
 
     function handleNovaMensagem(novaMensagem) {
         const mensagem = {
             // id: listaDeMensagens.length + 1,
-            de: 'efirminov',
+            de: usuarioLogado,
             texto: novaMensagem,
         };
         // backend
@@ -132,10 +149,7 @@ export default function ChatPage() {
                 mensagem
             ])
             .then(({ data }) => {
-                setListaDeMensagens([
-                    data[0],
-                    ...listaDeMensagens,
-                ]);
+                console.log(data);
             });
         setMensagem('');
     }
@@ -215,6 +229,13 @@ export default function ChatPage() {
                                 backgroundColor: appConfig.theme.colors.neutrals[800],
                                 marginRight: '12px',
                                 color: appConfig.theme.colors.neutrals[200],
+                            }}
+                        />
+                        {/* callback */}
+                        <ButtonSendSticker
+                            onStickerClick={(sticker) => {
+                                console.log('[usando o componente', sticker);
+                                handleNovaMensagem(':sticker:' + sticker);
                             }}
                         />
                     </Box>

@@ -3,7 +3,6 @@ import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-
 function Titulo(props) {
     const Tag = props.tag || 'h1';
     return (
@@ -20,32 +19,12 @@ function Titulo(props) {
     );
 }
 
-// Componente React
-//function HomePage() {
-//    // JSX
-//    return (
-//        <div>
-//            <GlobalStyle />
-//            <Titulo tag="h2">Boas vindas de volta!</Titulo>
-//            <h2><a href="https://github.com/efirminov">Github - efirminov</a></h2>
-//            <style jsx>{`
-//            h1 {
-//            color: red;
-//            }
-//        `}</style>
-//        </div>
-//    );
-//}
-//export default HomePage
-
 export default function PaginaInicial() {
-    //const username = 'efirminov';
     const [username, setUsername] = React.useState('efirminov');
     const roteamento = useRouter();
 
     return (
         <>
-
             <Box
                 styleSheet={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -69,14 +48,11 @@ export default function PaginaInicial() {
                         backgroundColor: appConfig.theme.colors.neutrals[700],
                     }}
                 >
-                    {/* Formulário */}
                     <Box
                         as="form"
                         onSubmit={function (infosDoEvento) {
                             infosDoEvento.preventDefault();
-                            console.log('Alguém submeteu o form');
-                            roteamento.push('/chat');
-                            // window.location.href = '/chat';
+                            roteamento.push(`/chat?username=${username}`);
                         }}
                         styleSheet={{
                             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
@@ -87,21 +63,6 @@ export default function PaginaInicial() {
                         <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
                             {appConfig.name}
                         </Text>
-
-                        {/*
-                        <input 
-                            type="text"
-                            value={username}
-                            onChange={function (event) {
-                                console.log("usuario digitou", event.target.value);
-                                // Onde ta o valor
-                                const valor = event.target.value;
-                                // Trocar o valor da variavel
-                                // através do React e avise quem precisa
-                                setUsername(valor);
-                            }}
-                         />*/}
-
                         <TextField
                             value={username}
                             onChange={function (event) {
@@ -122,7 +83,6 @@ export default function PaginaInicial() {
                                 },
                             }}
                         />
-
                         <Button
                             type='submit'
                             label='Entrar'
@@ -135,10 +95,6 @@ export default function PaginaInicial() {
                             }}
                         />
                     </Box>
-                    {/* Formulário */}
-
-
-                    {/* Photo Area */}
                     <Box
                         styleSheet={{
                             display: 'flex',
@@ -173,7 +129,6 @@ export default function PaginaInicial() {
                             {username}
                         </Text>
                     </Box>
-                    {/* Photo Area */}
                 </Box>
             </Box>
         </>
